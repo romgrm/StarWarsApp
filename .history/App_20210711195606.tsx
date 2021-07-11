@@ -29,8 +29,6 @@ export default function App() {
       {/* {fetchData.map((item) => (
           <Text>{item}</Text>
         ))} */}
-
-        <Text>Hello {fetchData.name}</Text>
     </View>
   );
 }

@@ -30,7 +30,7 @@ export default function App() {
           <Text>{item}</Text>
         ))} */}
 
-        <Text>Hello {fetchData.name}</Text>
+        
     </View>
   );
 }

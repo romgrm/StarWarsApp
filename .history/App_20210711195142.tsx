@@ -26,11 +26,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* {fetchData.map((item) => (
-          <Text>{item}</Text>
-        ))} */}
-
-        <Text>Hello {fetchData.name}</Text>
+      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text>Hello gang </Text>
+      <Card>
+        {fetchData.map(item => item.name)}
+      </Card>
+      
+      <StatusBar style="auto" />
     </View>
   );
 }

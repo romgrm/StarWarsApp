@@ -13,7 +13,7 @@ export default function App() {
 
       const fetchingData = async () => {
           
-          await axios.get('https://swapi.dev/api/people/1/')
+          await axios.get(https://swapi.dev/api/people)
               .then((response) => {
                   setFetchData(response.data)
                   console.log(response.data)
@@ -26,11 +26,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* {fetchData.map((item) => (
-          <Text>{item}</Text>
-        ))} */}
-
-        <Text>Hello {fetchData.name}</Text>
+      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text>Hello gang </Text>
+      <Card>
+        Hello
+      </Card>
+      
+      <StatusBar style="auto" />
     </View>
   );
 }

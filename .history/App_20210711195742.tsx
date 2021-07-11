@@ -31,6 +31,7 @@ export default function App() {
         ))} */}
 
         <Text>Hello {fetchData.name}</Text>
+        <Text>Can i see you {fetchData.starships[0]}</Text>
     </View>
   );
 }

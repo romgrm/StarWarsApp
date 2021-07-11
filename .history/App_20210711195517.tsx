@@ -26,11 +26,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* {fetchData.map((item) => (
-          <Text>{item}</Text>
-        ))} */}
-
-        <Text>Hello {fetchData.name}</Text>
+      {fetchData.map((item) => (
+          <Text>{item.name}</Text>
+        ))}
     </View>
   );
 }
