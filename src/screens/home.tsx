@@ -27,21 +27,38 @@ export const Home: FC<Props> = ({ navigation }) => {
     <View style={styles.container}>
       <ImageBackground
         source={require("../../assets/StarWars.png")}
-        resizeMode="cover"
+        resizeMode="repeat"
         style={styles.image}
       >
-        <Text style={styles.text}>STARWARS</Text>
-        <Input
-          placeholder="Enter your pseudo"
-          inputContainerStyle={styles.input}
-          inputStyle={styles.inputText}
-          onChangeText={(value) => setInput(value)}
-          value={input}
-        />
-
-        <Button title="CLICK" onPress={() => onSendPseudo(input)} />
-
-        <Button title="RESET" onPress={onResetPseudo} />
+        <View style={styles.containerTitle}>
+          <Text style={styles.text}>STARWARSAPP</Text>
+        </View>
+        <View style={styles.containerInput}>
+          <Input
+            placeholder="Enter your pseudo"
+            inputContainerStyle={styles.input}
+            containerStyle={styles.input}
+            inputStyle={styles.inputText}
+            onChangeText={(value) => setInput(value)}
+            value={input}
+          />
+        <View style={styles.buttonContainer}>
+          <Button
+            title="CLICK"
+            onPress={() => onSendPseudo(input)}
+            style={styles.buttonClick}
+            type="outline"
+            raised
+          />
+          <Button
+            title="RESET"
+            onPress={onResetPseudo}
+            style={styles.buttonReset}
+            type="outline"
+            raised
+          />
+        </View>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -51,21 +68,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  containerTitle: {
+    // backgroundColor: "red",
+    // marginBottom: "50%",
+    flex: 1,
+  },
   text: {
     fontFamily: "Star",
-    color: "white",
+    color: "#CFB874",
     textAlign: "center",
-    fontSize: 50,
+    fontSize: 40,
+  },
+  containerInput: {
+    // backgroundColor: 'green',
+    // marginBottom: '50%'
+    flex: 1,
+    display: "flex",
   },
   image: {
     flex: 1,
-    justifyContent: "center",
-    width: "100%",
+    // justifyContent: "center",
+    // width: "100%",
   },
   input: {
     // backgroundColor: 'red',
   },
   inputText: {
-    color: "white",
+    textDecorationColor: "white",
+    backgroundColor: "white",
+    fontFamily: "Star",
+  },
+  buttonContainer: {
+    display: 'flex', 
+    width: '100%',
+    // backgroundColor: 'yellow',
+    // justifyContent: "space-between",
+    alignItems: 'center'
+  },
+  buttonClick: {
+    backgroundColor: "#cfb874",
+  },
+  buttonReset: {
+    backgroundColor: "#e06e41",
   },
 });
