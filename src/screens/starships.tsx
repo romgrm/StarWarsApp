@@ -2,6 +2,7 @@ import React, { useContext, FC } from "react";
 import { View, Text } from "react-native";
 import { PseudoContext } from "../context/pseudoContext";
 import { ContextType } from "../types/contextType";
+import StarshipRequest from "../services/starshipRequest";
 
 /**
  * @pseudoPlayer the state present in the pseudoContext
@@ -13,6 +14,7 @@ export const starships = () => {
   return (
     <View>
       <Text>HELLO {pseudoPlayer}</Text>
+      <StarshipRequest />
     </View>
   );
 };
