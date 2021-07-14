@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Home } from "./src/screens/home";
 import { starships } from "./src/screens/starships";
+import Pilots from "./src/screens/pilots";
 import PseudoContextProvider from "./src/context/pseudoContext";
 
 /**
@@ -36,6 +37,7 @@ export default function App() {
           >
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="starships" component={starships} />
+            <Stack.Screen name="Pilots" component={Pilots} />
           </Stack.Navigator>
         </NavigationContainer>
       </PseudoContextProvider>

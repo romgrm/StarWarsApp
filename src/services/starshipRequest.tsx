@@ -7,82 +7,56 @@ import { Pilots } from "../interface/pilotsInterface";
 
 export default function starshipRequest() {
   const [fetchData, setFetchData] = useState<Starship[]>([]);
-  const [fetchPilots, setFetchPilots] = useState<Starship[]>([]);
-  const [fetchDataPilots, setFetchDataPilots] = useState<Pilots>();
 
   useEffect(() => {
-    const fetchingData = async () => {
-      await axios.get("https://swapi.dev/api/starships/").then((response) => {
-        setFetchData(response.data.results);
-        // setFetchPilots(response.data.results); 
-        // setFetchPilots(response.data.results);
-        // console.log(response.data.results[4].pilots);
-      });
-    };
-    fetchingData();
 
+    axios.get("https://swapi.dev/api/starships/").then(async (res) => {
+      const vaisseauxBrut = res.data.results; // data vaisseaux
+      //pour chaque vaisseau
+      const vaisseaux = await axios.all(
+        vaisseauxBrut.map(async (vaisseau) => {
+          const pilotes = await getAllPilotesFrom(vaisseau)
+          vaisseau.pilots = await pilotes;
+          return await vaisseau
+        })
+      )
+      //do something with the vaisseaux
+      await setFetchData(vaisseaux);
+      await console.log(vaisseaux)
+    })
+    
+    
+    const getAllPilotesFrom = async (vaisseau) => {
+      // on remplace tous les url de pilots par le résultat du fetch de l'url,
+      // et on retourne rien tant qu'on les a pas tous récupérés
+      // (l'array de vaisseaux n'est pas modifié ici !)
+      return axios.all(vaisseau.pilots.map(async (url) =>{ 
+        const res = await axios.get(url);
+        return res.data; // pilots data
+      }))
+    }
     
   }, []);
 
-  // useEffect(() => {
-  //   let test:string; 
-  //   console.log("zeub")
-  //   const fetchingTest = fetchData.forEach(element => {
-  //     console.log(element)
-  //   });
-  //   fetchingTest; 
-  // }, [])
-
-  // useEffect(() => {
-
-    
-  //   fetchData?.find(value => {
   
-  //     if(value.pilots.length > 0){
-  //       console.log(value)
-  //       setFetchPilots(value); 
-  //     }
-  //   })
-  // }, [])
-
-  useEffect(() => {
-
-  })
-  const displayPilots = (item: Starship) => {
-    if(item['pilots'].length > 0){
-      setFetchData(item['pilots'])
-    }
-  }
-
-
-
-  let isPilot: Boolean = false;
-  // const onFetchPilots = (item: Starship) => {
-  //   console.log(item);
-  //   if (item["pilots"].length > 0) {
-  //     isPilot = true;
-  //   }
-  // };
-  // onPress={() => onFetchPilots(item)}
+  
+ 
   return (
     <>
-      {/* <Text>{fetchData?.name}</Text> */}
-      {fetchData.map((item, key) => (
-        <TouchableOpacity onPress={() => displayPilots(item)}>
+      {fetchData.map((vaisseau, key) => (
+        
           <CardStarships
-            // index={item['name']}
             key={key}
             index={key}
-            name={item["name"]}
-            model={item["model"]}
-            manufacturer={item["manufacturer"]}
-            cost={item["cost"]}
-            pilot={item[2]}
-              // pilots={item['pilots']}
-            // pilots={isPilot ? item["pilots"] : "No pilots for this starship"}
-            // pilots={isPilot ? console.log(isPilot): console.log(isPilot) }
+            name={vaisseau["name"]}
+            model={vaisseau["model"]}
+            manufacturer={vaisseau["manufacturer"]}
+            cost={vaisseau["cost"]}
+            // pilots={vaisseau.pilots.map(p=>p.height)}
+            pilots={vaisseau.pilots}
+            navigation={navigation}
           />
-        </TouchableOpacity>
+       
       ))}
     </>
   );
