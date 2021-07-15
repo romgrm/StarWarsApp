@@ -6,8 +6,9 @@ import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Home } from "./src/screens/home";
-import { starships } from "./src/screens/starships";
+import { Starships } from "./src/screens/starships";
 import Pilots from "./src/screens/pilots";
+import Journey from "./src/screens/journey";
 import PseudoContextProvider from "./src/context/pseudoContext";
 
 /**
@@ -36,8 +37,9 @@ export default function App() {
             }}
           >
             <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="starships" component={starships} />
+            <Stack.Screen name="Starships" component={Starships} />
             <Stack.Screen name="Pilots" component={Pilots} />
+            <Stack.Screen name="Journey" component={Journey} />
           </Stack.Navigator>
         </NavigationContainer>
       </PseudoContextProvider>

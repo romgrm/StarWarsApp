@@ -17,7 +17,7 @@ import { Card, Button, ListItem, Divider } from "react-native-elements";
  * @pseudoPlayer the state present in the pseudoContext
  * @returns the pseudo of the player enter in the input before
  */
-export const starships = ({ navigation }) => {
+export const Starships = ({ navigation }) => {
   const { pseudoPlayer } = useContext(PseudoContext) as ContextType;
   const [fetchData, setFetchData] = useState<Starship[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
@@ -57,9 +57,10 @@ export const starships = ({ navigation }) => {
   const displayPilotName = (item: Pilots, vaisseau: Starship) => {
     console.log(item);
     navigation.navigate("Pilots", {
-      name: item["name"],
+      name: item.name,
       height: item.height,
       gender: item.gender,
+      birthYear: item.birth_year,
       vaisseau: vaisseau,
     });
     // navigation to a new page with item data (perso data)
@@ -94,7 +95,11 @@ export const starships = ({ navigation }) => {
           <TouchableOpacity onPress={() => onDisplayPilots()}>
             <Card containerStyle={styles.cardContainer}>
               <Card.Title style={styles.cardTitle}>{vaisseau.name}</Card.Title>
-              <Divider orientation="horizontal" color="white" style={styles.divider1}/>
+              <Divider
+                orientation="horizontal"
+                color="white"
+                style={styles.divider1}
+              />
               <Text style={styles.cardText}>
                 Starship Model : {vaisseau.model}
               </Text>
@@ -106,19 +111,28 @@ export const starships = ({ navigation }) => {
                 <View>
                   {vaisseau.pilots.length > 0 ? (
                     <View>
-
-                    <Text style={styles.cardText}> Select your pilot</Text>
-                    <Divider orientation="horizontal" color="white" style={styles.divider2}/>
+                      <Text style={styles.cardText}> Select your pilot</Text>
+                      <Divider
+                        orientation="horizontal"
+                        color="white"
+                        style={styles.divider2}
+                      />
                     </View>
                   ) : (
-                    <Text style={styles.cardText}>
-                      No pilots for this starship
-                    </Text>
+                    <View>
+                      <Divider
+                        orientation="horizontal"
+                        color="white"
+                        style={styles.divider2}
+                      />
+                      <Text style={styles.noPilotText}>
+                        No pilots for this starship, choose an other please
+                      </Text>
+                    </View>
                   )}
                   {vaisseau.pilots.map((item) => (
                     <TouchableOpacity
                       onPress={() => displayPilotName(item, vaisseau)}
-                      
                     >
                       <ListItem containerStyle={styles.listItemContainer}>
                         {item.name}
@@ -138,8 +152,6 @@ export const starships = ({ navigation }) => {
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    // justifyContent: "center",
-    // width: "100%",
   },
   title: {
     fontFamily: "Star",
@@ -168,10 +180,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 5,
     marginBottom: 5,
-    fontFamily: 'Star',
-    color: 'white',
+    fontFamily: "Star",
+    color: "white",
     fontSize: 12,
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   cardTitle: {
     color: "#cfb874",
@@ -183,12 +195,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "center",
   },
-  divider1:{
+  divider1: {
     marginBottom: 15,
-    
   },
-  divider2:{
+  divider2: {
     marginBottom: 15,
-    marginTop: 15
+    marginTop: 15,
+  },
+  noPilotText: {
+    fontFamily: 'Star', 
+    fontSize: 12, 
+    color: 'white', 
+    textAlign: 'center'
   }
 });

@@ -1,7 +1,7 @@
 import React, { useState, FC, useContext } from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
-import { Input } from "react-native-elements";
-import { Button } from "react-native-elements/dist/buttons/Button";
+import { Input, Button } from "react-native-elements";
+// import { Button } from "react-native-elements/dist/buttons/Button";
 import { PseudoContext } from "../context/pseudoContext";
 import { ContextType } from "../types/contextType";
 
@@ -16,7 +16,7 @@ export const Home: FC<Props> = ({ navigation }) => {
   const onSendPseudo = (input: string): void => {
     savePseudo(input);
     console.log(input);
-    navigation.navigate("starships");
+    navigation.navigate("Starships");
   };
 
   const onResetPseudo = (): void => {
@@ -46,16 +46,20 @@ export const Home: FC<Props> = ({ navigation }) => {
           <Button
             title="CLICK"
             onPress={() => onSendPseudo(input)}
-            style={styles.buttonClick}
             type="outline"
             raised
+            containerStyle={{marginBottom: 10, width: '50%'}}
+            titleStyle={{color: 'black'}}
+            buttonStyle={{borderColor: 'none', backgroundColor: "#cfb874",}}
           />
           <Button
             title="RESET"
             onPress={onResetPseudo}
-            style={styles.buttonReset}
             type="outline"
             raised
+            containerStyle={{marginBottom: 10, width: '50%'}}
+            titleStyle={{color: 'black'}}
+            buttonStyle={{borderColor: 'none', backgroundColor: "#e06e41",}}
           />
         </View>
         </View>
@@ -104,11 +108,5 @@ const styles = StyleSheet.create({
     // backgroundColor: 'yellow',
     // justifyContent: "space-between",
     alignItems: 'center'
-  },
-  buttonClick: {
-    backgroundColor: "#cfb874",
-  },
-  buttonReset: {
-    backgroundColor: "#e06e41",
   },
 });
