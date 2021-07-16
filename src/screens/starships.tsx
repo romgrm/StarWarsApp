@@ -5,19 +5,26 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import { PseudoContext } from "../context/pseudoContext";
 import { ContextType } from "../types/contextType";
 import axios from "react-native-axios";
 import { Starship } from "../interface/starshipsInterface";
 import { Pilots } from "../interface/pilotsInterface";
-import { Card, Button, ListItem, Divider } from "react-native-elements";
+import { Card, ListItem, Divider } from "react-native-elements";
 
 /**
- * @pseudoPlayer the state present in the pseudoContext
- * @returns the pseudo of the player enter in the input before
+ * @constant Starships is the screen where we fetch all the data, display her and passed her in props for other screens.
+ * @const pseudoPlayer allow to fetch pseudo's player with context.
+ * @function onScreenPilots allow to navigate to pilots screen and passed through her the data
  */
-export const Starships = ({ navigation }) => {
+
+type Props = {
+  navigation: any;
+};
+
+export const Starships: FC<Props> = ({ navigation }) => {
   const { pseudoPlayer } = useContext(PseudoContext) as ContextType;
   const [fetchData, setFetchData] = useState<Starship[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
@@ -25,45 +32,46 @@ export const Starships = ({ navigation }) => {
   const hidePilots: string = "hide pilots";
   const [nameButtonPilots, setNameButtonPilots] = useState<string>(seePilots);
 
+  /**
+   * Fetch the starships data, then for each starship, execute getAllPilotesFrom() method who fetch pilots data
+   with their urls. After pilots data is fetching, remplace urls by their data (startshipItem.pilots = await pilotsData). After, put all data fetched in fetchData state. 
+   */
   useEffect(() => {
-    axios.get("https://swapi.dev/api/starships/").then(async (res) => {
-      const vaisseauxBrut = res.data.results; // data vaisseaux
-      //pour chaque vaisseau
-      const vaisseaux = await axios.all(
-        vaisseauxBrut.map(async (vaisseau) => {
-          const pilotes = await getAllPilotesFrom(vaisseau);
-          vaisseau.pilots = await pilotes;
-          return await vaisseau;
+    axios.get("https://swapi.dev/api/starships/").then(async (res: any) => {
+      const starships = res.data.results;
+
+      const eachStarship = await axios.all(
+        starships.map(async (startshipItem: any) => {
+          const pilotsData = await getAllPilotsFrom(startshipItem);
+          startshipItem.pilots = await pilotsData;
+          return await startshipItem;
         })
       );
-      //do something with the vaisseaux
-      await setFetchData(vaisseaux);
-      await console.log(vaisseaux);
+
+      await setFetchData(eachStarship);
     });
 
-    const getAllPilotesFrom = async (vaisseau) => {
-      // on remplace tous les url de pilots par le résultat du fetch de l'url,
-      // et on retourne rien tant qu'on les a pas tous récupérés
-      // (l'array de vaisseaux n'est pas modifié ici !)
+    /**
+     * axios.all allow to executing multiple urls
+     */
+    const getAllPilotsFrom = async (starship: any) => {
       return axios.all(
-        vaisseau.pilots.map(async (url) => {
+        starship.pilots.map(async (url: any) => {
           const res = await axios.get(url);
-          return res.data; // pilots data
+          return res.data;
         })
       );
     };
   }, []);
 
-  const displayPilotName = (item: Pilots, vaisseau: Starship) => {
-    console.log(item);
+  const onScreenPilots = (pilot: Pilots, starship: Starship) => {
     navigation.navigate("Pilots", {
-      name: item.name,
-      height: item.height,
-      gender: item.gender,
-      birthYear: item.birth_year,
-      vaisseau: vaisseau,
+      name: pilot.name,
+      height: pilot.height,
+      gender: pilot.gender,
+      birthYear: pilot.birth_year,
+      starship: starship,
     });
-    // navigation to a new page with item data (perso data)
   };
 
   const onDisplayPilots = () => {
@@ -76,76 +84,79 @@ export const Starships = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <ImageBackground
-        source={require("../../assets/StarWars.png")}
-        resizeMode="repeat"
-        style={styles.image}
-      >
-        <Text style={styles.title}>STARWARSAPP</Text>
-        <View style={styles.containerIntro}>
-          <Text style={styles.text}>
-            Hi {pseudoPlayer}, please choose your starship for your journey. You
-            can see the details and pilots of each starship by clicking on the
-            cards
-          </Text>
-        </View>
-        {/* <Button title={nameButtonPilots} onPress={() => onDisplayPilots()} /> */}
-        {fetchData.map((vaisseau, key) => (
-          <TouchableOpacity onPress={() => onDisplayPilots()}>
-            <Card containerStyle={styles.cardContainer}>
-              <Card.Title style={styles.cardTitle}>{vaisseau.name}</Card.Title>
-              <Divider
-                orientation="horizontal"
-                color="white"
-                style={styles.divider1}
-              />
-              <Text style={styles.cardText}>
-                Starship Model : {vaisseau.model}
-              </Text>
-              <Text style={styles.cardText}>
-                Constructor : {vaisseau.manufacturer}
-              </Text>
-              <Text>{vaisseau.cost}</Text>
-              {display === true ? (
-                <View>
-                  {vaisseau.pilots.length > 0 ? (
-                    <View>
-                      <Text style={styles.cardText}> Select your pilot</Text>
-                      <Divider
-                        orientation="horizontal"
-                        color="white"
-                        style={styles.divider2}
-                      />
-                    </View>
-                  ) : (
-                    <View>
-                      <Divider
-                        orientation="horizontal"
-                        color="white"
-                        style={styles.divider2}
-                      />
-                      <Text style={styles.noPilotText}>
-                        No pilots for this starship, choose an other please
-                      </Text>
-                    </View>
-                  )}
-                  {vaisseau.pilots.map((item) => (
-                    <TouchableOpacity
-                      onPress={() => displayPilotName(item, vaisseau)}
-                    >
-                      <ListItem containerStyle={styles.listItemContainer}>
-                        {item.name}
-                      </ListItem>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              ) : null}
-            </Card>
-          </TouchableOpacity>
-        ))}
-      </ImageBackground>
-    </View>
+    <ScrollView>
+      <View>
+        <ImageBackground
+          source={require("../../assets/StarWars.png")}
+          resizeMode="repeat"
+          style={styles.image}
+        >
+          <Text style={styles.title}>STARWARSAPP</Text>
+          <View style={styles.containerIntro}>
+            <Text style={styles.text}>
+              Hi {pseudoPlayer}, please choose your starship for your journey.
+              You can see the details and pilots of each starship by clicking on
+              the cards
+            </Text>
+          </View>
+          {fetchData.map((starship: any, key: number) => (
+            <TouchableOpacity onPress={() => onDisplayPilots()} key={key}>
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Title style={styles.cardTitle}>
+                  {starship.name}
+                </Card.Title>
+                <Divider
+                  orientation="horizontal"
+                  color="white"
+                  style={styles.divider1}
+                />
+                <Text style={styles.cardText}>
+                  Starship Model : {starship.model}
+                </Text>
+                <Text style={styles.cardText}>
+                  Constructor : {starship.manufacturer}
+                </Text>
+                {display === true ? (
+                  <View>
+                    {starship.pilots.length > 0 ? (
+                      <View>
+                        <Text style={styles.cardText}> Select your pilot</Text>
+                        <Divider
+                          orientation="horizontal"
+                          color="white"
+                          style={styles.divider2}
+                        />
+                      </View>
+                    ) : (
+                      <View>
+                        <Divider
+                          orientation="horizontal"
+                          color="white"
+                          style={styles.divider2}
+                        />
+                        <Text style={styles.noPilotText}>
+                          No pilots for this starship, choose an other please
+                        </Text>
+                      </View>
+                    )}
+                    {starship.pilots.map((pilot: any, key: number) => (
+                      <TouchableOpacity
+                        onPress={() => onScreenPilots(pilot, starship)}
+                        key={key}
+                      >
+                        <ListItem containerStyle={styles.listItemContainer}>
+                          <Text style={{ color: "white" }}>{pilot.name}</Text>
+                        </ListItem>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ) : null}
+              </Card>
+            </TouchableOpacity>
+          ))}
+        </ImageBackground>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -181,7 +192,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
     fontFamily: "Star",
-    color: "white",
     fontSize: 12,
     justifyContent: "center",
   },
@@ -203,9 +213,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   noPilotText: {
-    fontFamily: 'Star', 
-    fontSize: 12, 
-    color: 'white', 
-    textAlign: 'center'
-  }
+    fontFamily: "Star",
+    fontSize: 12,
+    color: "white",
+    textAlign: "center",
+  },
 });

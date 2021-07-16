@@ -1,9 +1,14 @@
 import React, { useState, FC, useContext } from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import { Input, Button } from "react-native-elements";
-// import { Button } from "react-native-elements/dist/buttons/Button";
 import { PseudoContext } from "../context/pseudoContext";
 import { ContextType } from "../types/contextType";
+
+/**
+ * @constant Home is the home screen who fetch the player's pseudo and allow us to go to starships screen.
+ * @function onSendPseudo allow us to send the pseudo and navigate to starships screen. 
+ * @function onResetPseudo allow us to reset the pseudo. 
+ */
 
 type Props = {
   navigation: any;
@@ -14,15 +19,19 @@ export const Home: FC<Props> = ({ navigation }) => {
   const [input, setInput] = useState<string>("");
 
   const onSendPseudo = (input: string): void => {
-    savePseudo(input);
-    console.log(input);
-    navigation.navigate("Starships");
+    if (input === '') {
+      alert("Please enter your pseudo");
+    } else {
+      savePseudo(input);
+      navigation.navigate("Starships");
+      onResetPseudo();
+    }
   };
 
   const onResetPseudo = (): void => {
-    setInput("");
-    console.log(input);
+    setInput('');
   };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -36,32 +45,30 @@ export const Home: FC<Props> = ({ navigation }) => {
         <View style={styles.containerInput}>
           <Input
             placeholder="Enter your pseudo"
-            inputContainerStyle={styles.input}
-            containerStyle={styles.input}
             inputStyle={styles.inputText}
             onChangeText={(value) => setInput(value)}
             value={input}
           />
-        <View style={styles.buttonContainer}>
-          <Button
-            title="CLICK"
-            onPress={() => onSendPseudo(input)}
-            type="outline"
-            raised
-            containerStyle={{marginBottom: 10, width: '50%'}}
-            titleStyle={{color: 'black'}}
-            buttonStyle={{borderColor: 'none', backgroundColor: "#cfb874",}}
-          />
-          <Button
-            title="RESET"
-            onPress={onResetPseudo}
-            type="outline"
-            raised
-            containerStyle={{marginBottom: 10, width: '50%'}}
-            titleStyle={{color: 'black'}}
-            buttonStyle={{borderColor: 'none', backgroundColor: "#e06e41",}}
-          />
-        </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Let's go"
+              onPress={() => onSendPseudo(input)}
+              type="outline"
+              raised
+              containerStyle={{ marginBottom: 10, width: "50%", marginTop: 10 }}
+              titleStyle={{ color: "white" }}
+              buttonStyle={{ borderColor: "none", backgroundColor: "#cfb874" }}
+            />
+            <Button
+              title="Reset"
+              onPress={onResetPseudo}
+              type="outline"
+              raised
+              containerStyle={{ marginBottom: 10, width: "50%" }}
+              titleStyle={{ color: "white" }}
+              buttonStyle={{ borderColor: "none", backgroundColor: "#e06e41" }}
+            />
+          </View>
         </View>
       </ImageBackground>
     </View>
@@ -73,8 +80,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerTitle: {
-    // backgroundColor: "red",
-    // marginBottom: "50%",
     flex: 1,
   },
   text: {
@@ -84,18 +89,12 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
   containerInput: {
-    // backgroundColor: 'green',
-    // marginBottom: '50%'
     flex: 1,
     display: "flex",
+    marginBottom: 200,
   },
   image: {
     flex: 1,
-    // justifyContent: "center",
-    // width: "100%",
-  },
-  input: {
-    // backgroundColor: 'red',
   },
   inputText: {
     textDecorationColor: "white",
@@ -103,10 +102,8 @@ const styles = StyleSheet.create({
     fontFamily: "Star",
   },
   buttonContainer: {
-    display: 'flex', 
-    width: '100%',
-    // backgroundColor: 'yellow',
-    // justifyContent: "space-between",
-    alignItems: 'center'
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
   },
 });

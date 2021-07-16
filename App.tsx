@@ -1,20 +1,19 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
-import { StyleSheet} from "react-native";
+import React from "react";
+import { StyleSheet, SafeAreaView, ImageBackground } from "react-native";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Home } from "./src/screens/home";
 import { Starships } from "./src/screens/starships";
-import Pilots from "./src/screens/pilots";
-import Journey from "./src/screens/journey";
+import { Pilots } from "./src/screens/pilots";
+import { Journey } from "./src/screens/journey";
 import PseudoContextProvider from "./src/context/pseudoContext";
 
 /**
- * @Stack the stack of screens, from react-navigation, who allow to move screen to screen
- * @fontsLoaded display the home screen only when fonts are loaded
- * @PseudoContextProvider the provider of the Context
+ * @constant Stack the stack of screens, from react-navigation, who allow to move screen to screen
+ * @param fontsLoaded display the home screen only when fonts are loaded
+ * @PseudoContextProvider is the provider of the Context
  */
 
 const Stack = createStackNavigator();
@@ -29,19 +28,27 @@ export default function App() {
   } else {
     return (
       <PseudoContextProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Starships" component={Starships} />
-            <Stack.Screen name="Pilots" component={Pilots} />
-            <Stack.Screen name="Journey" component={Journey} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <ImageBackground
+          source={require("./assets/StarWars.png")}
+          resizeMode="repeat"
+          style={{ flex: 1 }}
+        >
+          <SafeAreaView style={{ flex: 1 }}>
+            <NavigationContainer>
+              <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Starships" component={Starships} />
+                <Stack.Screen name="Pilots" component={Pilots} />
+                <Stack.Screen name="Journey" component={Journey} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </SafeAreaView>
+        </ImageBackground>
       </PseudoContextProvider>
     );
   }

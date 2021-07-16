@@ -1,10 +1,22 @@
-import React from "react";
+import React, { FC } from "react";
 import { View, Text, StyleSheet, ImageBackground, Image } from "react-native";
 import { Card, Divider, Button } from "react-native-elements";
-export default function Journey({ navigation, route }) {
+
+/**
+ * @const Journey is the last screen who display the starship & the pilot selected
+ * @param navigation and @param route have the same roles as the pilots screen.
+ * @function onDisplayHomeScreen allows you to return to the home screen.
+ */
+
+type Props = {
+  navigation: any;
+  route: any;
+};
+
+export const Journey: FC<Props> = ({ navigation, route }) => {
   const { params } = route;
 
-  const onDisplayStarships = () => {
+  const onDisplayHomeScreen = () => {
     navigation.navigate("Home");
   };
   return (
@@ -40,18 +52,18 @@ export default function Journey({ navigation, route }) {
         <View style={styles.buttonContainer}>
           <Button
             title="Restart"
-            onPress={() => onDisplayStarships()}
+            onPress={() => onDisplayHomeScreen()}
             type="outline"
             raised
             containerStyle={{ marginBottom: 10, width: "50%" }}
-            titleStyle={{ color: "black" }}
+            titleStyle={{ color: "white" }}
             buttonStyle={{ borderColor: "none", backgroundColor: "#cfb874" }}
           />
         </View>
       </ImageBackground>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

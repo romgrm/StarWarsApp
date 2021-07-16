@@ -1,23 +1,36 @@
-import React from "react";
+import React, { FC } from "react";
 import { View, Text, ImageBackground, StyleSheet } from "react-native";
 import { Card, Divider, Button } from "react-native-elements";
 import { Pilots as PilotInterface } from "../interface/pilotsInterface";
 import { Starship } from "../interface/starshipsInterface";
 
-export default function Pilots({ navigation, route }) {
- 
-    const {params} = route;
-    const {vaisseau} = params;
-    const onDisplayFinal = (params: PilotInterface, vaisseau: Starship) => {
+/**
+ * @constant Pilots is the screen where we fetch and display data's pilot. We also passed the starship data for the last screen.
+ * @function onDisplayFinal allow us to navigate to journey screen and passed some data.
+ * @function onDisplayStarships allow us to go back, on starships screen.
+ * @param navigation and @param route are part of the react navigation library, it's destructuring to navigate between screens and recover data.
+ */
+
+type Props = {
+  navigation: any;
+  route: any;
+};
+
+export const Pilots: FC<Props> = ({ navigation, route }) => {
+  const { params } = route;
+  const { starship } = params;
+
+  const onDisplayFinal = (params: PilotInterface, starship: Starship) => {
     navigation.navigate("Journey", {
-        pilotName: params.name, 
-        starshipName: vaisseau.name,
-        starshipModel: vaisseau.model 
+      pilotName: params.name,
+      starshipName: starship.name,
+      starshipModel: starship.model,
     });
   };
   const onDisplayStarships = () => {
     navigation.goBack();
   };
+  
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -25,9 +38,8 @@ export default function Pilots({ navigation, route }) {
         resizeMode="repeat"
         style={styles.image}
       >
-        {console.log(route)}
         <Text style={styles.title}>STARWARSAPP</Text>
-        
+
         <Card containerStyle={styles.cardContainer}>
           <Card.Title style={styles.cardTitle}>{params.name}</Card.Title>
           <Divider
@@ -38,16 +50,15 @@ export default function Pilots({ navigation, route }) {
           <Text style={styles.cardText}>Height : {params.height}</Text>
           <Text style={styles.cardText}>Gender : {params.gender}</Text>
           <Text style={styles.cardText}>Birth Year : {params.birthYear}</Text>
-          
         </Card>
         <View style={styles.buttonContainer}>
           <Button
             title="Choose this pilot"
-            onPress={() => onDisplayFinal(params, vaisseau)}
+            onPress={() => onDisplayFinal(params, starship)}
             type="outline"
             raised
             containerStyle={{ marginBottom: 10, width: "50%" }}
-            titleStyle={{ color: "black" }}
+            titleStyle={{ color: "white" }}
             buttonStyle={{ borderColor: "none", backgroundColor: "#cfb874" }}
           />
           <Button
@@ -56,15 +67,18 @@ export default function Pilots({ navigation, route }) {
             type="outline"
             raised
             containerStyle={{ marginBottom: 10, width: "50%" }}
-            titleStyle={{ color: "black" }}
+            titleStyle={{ color: "white" }}
             buttonStyle={{ borderColor: "none", backgroundColor: "#e06e41" }}
           />
         </View>
       </ImageBackground>
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   image: {
     flex: 1,
   },
@@ -92,9 +106,6 @@ const styles = StyleSheet.create({
   divider2: {
     marginBottom: 15,
     marginTop: 5,
-  },
-  container: {
-    flex: 1,
   },
   buttonContainer: {
     display: "flex",

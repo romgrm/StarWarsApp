@@ -14,7 +14,6 @@ const PseudoContextProvider: FC<ReactNode> = ({ children }) => {
 
   const savePseudo = (input: Pseudo["name"]) => {
     setPseudoPlayer(input);
-    console.log("hey" + input);
   };
   return (
     <PseudoContext.Provider value={{ pseudoPlayer, savePseudo }}>
